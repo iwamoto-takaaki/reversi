@@ -1,12 +1,20 @@
-<template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
-  </div>
+<template lang="pug">
+  #app
+    #nav
+      headerVue/
+    router-view/
 </template>
+
+<script lang="ts">
+import { defineComponent } from '@vue/composition-api';
+import headerVue from '@/components/Header.vue';
+
+export default defineComponent({
+  components: {
+    headerVue,
+  },
+})
+</script>
 
 <style>
 #app {
