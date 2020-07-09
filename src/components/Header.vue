@@ -7,20 +7,29 @@
                 router-link(to="/") Home1
                 router-link(to="/about") About
             .login
-                .signin-btn(v-if="!authorized")
+                .signin-btn(v-if="authorized")
                     router-link.button(to="/auth") Sign In
                 .signout(v-else)
                     .singout-btn.button(@click="signOut") Sign out
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { Component } from 'vue-property-decorator'
-import { User } from 'firebase'
+import { defineComponent, computed } from '@vue/composition-api'
+import FirebaseUser from '@/scripts/user'
 
-@Component
-export default class HeaderView extends Vue {
-}
+export default defineComponent ({
+    props: {
+        user: {
+            type: FirebaseUser,
+            required: true,
+        },
+    },
+    setup(props) {
+        const authorized = computed(() => props.user.authrized)
+
+        return { authorized }
+    }
+})
 </script>
 
 <style lang="sass" scoped>

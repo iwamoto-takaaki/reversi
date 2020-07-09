@@ -21,6 +21,6 @@ export default defineComponent({
                 signInSuccessUrl: from(),
             })
         })
-    }
+    },
 })
 </script>
