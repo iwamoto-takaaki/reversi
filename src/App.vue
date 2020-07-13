@@ -1,33 +1,18 @@
 <template lang="pug">
   #app
     #nav
-      headerVue(:user="user")/
+      headerVue/
     router-view/
 </template>
 
 <script lang="ts">
 import { defineComponent, onMounted, reactive, onUnmounted } from '@vue/composition-api';
 import headerVue from '@/components/Header.vue';
-import FirebaseUser from '@/scripts/user'
 
 export default defineComponent({
   components: {
     headerVue,
   },
-  setup() {
-    const state = reactive<{
-      user: FirebaseUser,
-    }> ({
-      user: new FirebaseUser()
-    })
-
-    onMounted(() => { state.user.subscribe() })
-    onUnmounted(() => { state.user.unsubscribe() })
-
-    return { ...state }
-  },
-
-
 })
 </script>
 

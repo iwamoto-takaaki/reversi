@@ -13,13 +13,18 @@ const routes: RouteConfig[] = [
   {
     path: '/about',
     name: 'About',
-    component: () => import('../views/About.vue'),
+    component: () => import('@/views/About.vue'),
   },
   {
     path: '/auth',
     name: 'Auth',
-    component: () => import('@/views/Auth.vue')
-  }
+    component: () => import('@/views/Auth.vue'),
+  },
+  {
+    path: '/gemetables',
+    name: 'GameTables',
+    component: () => import('@/views/GameTables.vue'),
+  },
 ];
 
 const router = new VueRouter({

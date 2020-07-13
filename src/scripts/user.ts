@@ -1,25 +1,35 @@
 import { Unsubscribe, User } from 'firebase'
 import { auth } from '@/scripts/firebase'
+import { ref, Ref, toRef, ComputedRef, computed } from '@vue/composition-api'
 
-export default class FirebaseUser {
-    private detacher?: Unsubscribe
-    private data?: User
+export interface FirebaseUser {
+    subscribe: () => void,
+    unsubscribe: () => void,
+    logout: () => void,
+    authenticated: () => ComputedRef<boolean>,
+    uid: () => ComputedRef<string>,
+    displayName: () => ComputedRef<string>,
+}
 
-    public subscribe() {
-        this.detacher = auth.onAuthStateChanged((user) => {
-            if (!!user) {
-                this.data = user
-            } else {
-                this.data = undefined
-            }
+const getUser = (): FirebaseUser => {
+    const data = ref<User | null> (null)
+    let detacher: Unsubscribe | undefined
+
+    const subscribe = () => {
+        detacher = auth.onAuthStateChanged((user) => {
+            data.value = user
         })
     }
 
-    public unsubscribe() {
-        this.detacher && this.unsubscribe()
-    }
+    const logout = () => data.value = null
 
-    public get authrized(): boolean {
-        return !!this.data
-    }
-};
+    const unsubscribe = () => detacher && detacher()
+
+    const authenticated = () => computed(() => data.value !== null)
+    const uid = () => computed(() => data.value?.uid || '')
+    const displayName = () => computed(() => data.value?.displayName || '')
+
+    return { subscribe, unsubscribe, logout, authenticated, uid, displayName }
+}
+
+export default getUser

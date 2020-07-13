@@ -7,28 +7,27 @@
                 router-link(to="/") Home1
                 router-link(to="/about") About
             .login
-                .signin-btn(v-if="authorized")
+                .signin-btn(v-if="!authenticated().value")
                     router-link.button(to="/auth") Sign In
                 .signout(v-else)
-                    .singout-btn.button(@click="signOut") Sign out
+                    .singout-btn.button(@click="logout") Sign out
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from '@vue/composition-api'
-import FirebaseUser from '@/scripts/user'
+import { defineComponent, computed, onMounted, onUnmounted, watch } from '@vue/composition-api'
+import getUser from '@/scripts/user'
 
 export default defineComponent ({
-    props: {
-        user: {
-            type: FirebaseUser,
-            required: true,
-        },
-    },
     setup(props) {
-        const authorized = computed(() => props.user.authrized)
+        const user = getUser()
+        onMounted(() => user.subscribe())
+        onUnmounted(() => user.unsubscribe())
 
-        return { authorized }
-    }
+        const authenticated = user.authenticated
+        const logout = user.logout
+
+        return { authenticated, logout}
+    },
 })
 </script>
 
