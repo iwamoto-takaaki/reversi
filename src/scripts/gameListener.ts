@@ -65,8 +65,8 @@ const getGameTableListener = (user: FirebaseUser): GameTableListener => {
     }
     const unsubscribe = () => detacher && detacher()
 
-    watch([user.uid], () => { 
-        if(!user.unsubscribe) { return }
+    watch([user.uid], () => {
+        if (!user.unsubscribe) { return }
         unsubscribe()
         subscribe()
     } )
