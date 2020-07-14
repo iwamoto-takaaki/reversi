@@ -6,14 +6,14 @@
       input.newTitle(type="text" v-model="newTitle")
       input.submit(type="submit" value="登録")
     .tableList(v-for="game in games" :key="game.id")
-      p {{ game.title }}
+      p(@click="gameClicked(game)") {{ game.title }}
 </template>
 
 <script lang="ts">
 import { defineComponent, reactive, computed, onMounted, ref, toRef, onUnmounted } from '@vue/composition-api'
 import { Listener } from '@/scripts/interfaces'
 import getUser from '@/scripts/user'
-import getGameTableListener from '@/scripts/gameListener'
+import getGameTableListener, { GameTable } from '@/scripts/gameListener'
 
 export default defineComponent ({
   setup(props, { root }) {
@@ -39,7 +39,10 @@ export default defineComponent ({
       newTitle.value = ''
     }
 
-    return { newTitle, userid, state, games, createGameTable }
+    const moveGame = (id: string) => root.$router.push(`/game/${id}`)
+    const gameClicked = (game: GameTable) => moveGame(game.id)
+
+    return { newTitle, userid, state, games, createGameTable, gameClicked }
   },
 })
 </script>

@@ -25,6 +25,11 @@ const routes: RouteConfig[] = [
     name: 'GameTables',
     component: () => import('@/views/GameTables.vue'),
   },
+  {
+    path: '/game/:gameTableId',
+    name: 'Game',
+    component: () => import('@/views/Game.vue'),
+  },
 ];
 
 const router = new VueRouter({
