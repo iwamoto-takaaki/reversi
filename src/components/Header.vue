@@ -6,6 +6,7 @@
             .links
                 router-link(to="/") Home1
                 router-link(to="/about") About
+                router-link(to="/gametables" v-if="authenticated") Reversi
             .login
                 .signin-btn(v-if="!authenticated")
                     router-link.button(to="/auth") Sign In

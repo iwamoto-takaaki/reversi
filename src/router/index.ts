@@ -21,7 +21,7 @@ const routes: RouteConfig[] = [
     component: () => import('@/views/Auth.vue'),
   },
   {
-    path: '/gemetables',
+    path: '/gametables',
     name: 'GameTables',
     component: () => import('@/views/GameTables.vue'),
   },
