@@ -7,7 +7,7 @@
                 router-link(to="/") Home1
                 router-link(to="/about") About
             .login
-                .signin-btn(v-if="!authenticated().value")
+                .signin-btn(v-if="!authenticated")
                     router-link.button(to="/auth") Sign In
                 .signout(v-else)
                     .singout-btn.button(@click="logout") Sign out

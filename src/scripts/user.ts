@@ -6,9 +6,9 @@ export interface FirebaseUser {
     subscribe: () => void,
     unsubscribe: () => void,
     logout: () => void,
-    authenticated: () => ComputedRef<boolean>,
-    uid: () => ComputedRef<string>,
-    displayName: () => ComputedRef<string>,
+    authenticated: ComputedRef<boolean>,
+    uid: ComputedRef<string>,
+    displayName: ComputedRef<string>,
 }
 
 const getUser = (): FirebaseUser => {
@@ -25,9 +25,9 @@ const getUser = (): FirebaseUser => {
 
     const unsubscribe = () => detacher && detacher()
 
-    const authenticated = () => computed(() => data.value !== null)
-    const uid = () => computed(() => data.value?.uid || '')
-    const displayName = () => computed(() => data.value?.displayName || '')
+    const authenticated = computed(() => data.value !== null)
+    const uid = computed(() => data.value?.uid || '')
+    const displayName = computed(() => data.value?.displayName || '')
 
     return { subscribe, unsubscribe, logout, authenticated, uid, displayName }
 }
