@@ -57,19 +57,13 @@ const getGameTableListener = (user: FirebaseUser): GameTableListener => {
 
     const subscribe = () => {
         detacher =　refCollection
-            .where('ownerId', '==', user.uid.value)
+            .where('ownerId', '==', user.uid)
             .orderBy('createdAt')
             .onSnapshot((snapshot) => {
                 data.value = snapshot.docs.map((doc) => toGameTable(doc.id, doc.data()))
             })
     }
     const unsubscribe = () => detacher && detacher()
-
-    watch([user.uid], () => {
-        if (!user.unsubscribe) { return }
-        unsubscribe()
-        subscribe()
-    } )
 
     const newRecord = async (title: string) => (await refCollection.add(newGameTable(user, title))).id
     const remove = async (game: GameTable) => await refCollection.doc(game.id).delete()

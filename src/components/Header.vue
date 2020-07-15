@@ -15,17 +15,19 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, onMounted, onUnmounted, watch } from '@vue/composition-api'
-import getUser from '@/scripts/user'
+import { defineComponent, computed, onMounted, onUnmounted, watch, PropType } from '@vue/composition-api'
+import getUser, { FirebaseUser } from '@/scripts/user'
 
 export default defineComponent ({
+    props: {
+        user: {
+            type: Object as PropType<FirebaseUser>,
+            required: true,
+        },
+    },
     setup(props) {
-        const user = getUser()
-        onMounted(() => user.subscribe())
-        onUnmounted(() => user.unsubscribe())
-
-        const authenticated = user.authenticated
-        const logout = user.logout
+        const authenticated = computed(() => props.user.authenticated)
+        const logout = props.user.logout
 
         return { authenticated, logout}
     },

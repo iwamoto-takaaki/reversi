@@ -1,6 +1,7 @@
 <template lang="pug">
   #gemetables
     h1 テーブル一覧
+    p userId: {{ userid }}
     P newGameId: {{ state.id }}
     form.new-game(@submit.prevent="createGameTable")
       input.newTitle(type="text" v-model="newTitle")
@@ -10,12 +11,18 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, computed, onMounted, ref, toRef, onUnmounted } from '@vue/composition-api'
+import { defineComponent, reactive, computed, onMounted, ref, toRef, onUnmounted, PropType } from '@vue/composition-api'
 import { Listener } from '@/scripts/interfaces'
-import getUser from '@/scripts/user'
+import { FirebaseUser } from '@/scripts/user'
 import getGameTableListener, { GameTable } from '@/scripts/gameListener'
 
 export default defineComponent ({
+    props: {
+      user: {
+          type: Object as PropType<FirebaseUser>,
+          required: true,
+      },
+  },
   setup(props, { root }) {
     const newTitle = ref<string>('Title')
     const state = reactive<{
@@ -23,15 +30,13 @@ export default defineComponent ({
     }> ({
       id: '',
     })
-    const user = getUser()
-    const gameListener = getGameTableListener(user)
+    const gameListener = getGameTableListener(props.user)
 
-    const lisners: Listener[] = [user, gameListener]
-    onMounted(() => lisners.forEach((l) => l.subscribe()))
-    onUnmounted(() => lisners.forEach((l) => l.unsubscribe()))
+    onMounted(() => gameListener.subscribe())
+    onUnmounted(() => gameListener.unsubscribe())
 
     const games = gameListener.data
-    const userid = user.uid
+    const userid = props.user.uid
 
     const createGameTable = async () => {
       if (!newTitle.value) { return }

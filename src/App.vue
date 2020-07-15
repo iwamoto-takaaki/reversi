@@ -1,17 +1,26 @@
 <template lang="pug">
   #app
     #nav
-      headerVue/
-    router-view/
+      headerVue(:user="user")/
+    router-view(:user="user")/
 </template>
 
 <script lang="ts">
 import { defineComponent, onMounted, reactive, onUnmounted } from '@vue/composition-api';
 import headerVue from '@/components/Header.vue';
+import getUser from '@/scripts/user'
 
 export default defineComponent({
   components: {
     headerVue,
+  },
+  setup() {
+    const user = getUser()
+
+    onMounted(() => user.subscribe())
+    onUnmounted(() => user.unsubscribe())
+
+    return { user }
   },
 })
 </script>
