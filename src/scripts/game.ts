@@ -18,8 +18,15 @@ export interface Game {
 const initCells = (): Cell[] => {
     const ret: Cell[] = []
     for (let i = 0; i < 8 * 8 ; ++i) {
-        ret.push({location: i, color: 'blank'})
+        if (i === 3 * 8 + 3 || i === 4 * 8 + 4) {
+            ret.push({location: i, color: 'black'})
+        } else if(i === 4 * 8 +3 || i === 3 * 8 + 4) {
+            ret.push({location: i, color: 'white'})
+        } else {
+            ret.push({location: i, color: 'blank'})
+        }
     }
+
     return ret
 }
 

@@ -1,12 +1,12 @@
 <template lang="pug">
     #game
         h1 Reversi
-        p helle {{ displayName }}
+        p hello {{ displayName }}
         .baord
             .cells(v-for="cell in cells" :key="cell.location")
-                .blank-cell.cell(v-if="cell.color === 'blank'" @click="setPiece(cell.location, 'black')") " " 
-                .black-cell.cell(v-else-if="cell.color === 'black'" @click="setPiece(cell.location, 'white')") black
-                .white-cell.cell(v-else @click="setPiece(cell.location, 'black')") white
+                .blank-cell.cell(v-if="cell.color === 'blank'" @click="setPiece(cell.location, 'black')") 
+                .black-cell.cell(v-else-if="cell.color === 'black'" @click="setPiece(cell.location, 'white')") ●
+                .white-cell.cell(v-else @click="setPiece(cell.location, 'black')") ○
 </template>
 
 <script lang="ts">
@@ -40,3 +40,24 @@ export default defineComponent({
     },
 })
 </script>
+
+<style lang="sass" scoped>
+@import 'src/sass/style'
+
+#game
+    display: flex
+    flex-direction: column
+    align-items: center
+    .baord
+        margin-left: auto
+        margin-right: auto
+        display: grid
+        grid-template-columns: 3rem 3rem 3rem 3rem 3rem 3rem 3rem 3rem
+        .cell
+            font-size: 3rem
+            display: flex
+            justify-content: center
+            align-items: center
+            height: 3rem
+            border: 1.5px solid #888
+</style>
