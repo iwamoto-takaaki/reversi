@@ -3,15 +3,15 @@
         h1 Reversi
         p hello {{ displayName }}
         .baord
-            .cells(v-for="cell in cells" :key="cell.location")
-                .blank-cell.cell(v-if="cell.color === 'blank'" @click="setPiece(cell.location, 'black')") 
-                .black-cell.cell(v-else-if="cell.color === 'black'" @click="setPiece(cell.location, 'white')") ●
-                .white-cell.cell(v-else @click="setPiece(cell.location, 'black')") ○
+            .cells(v-for="(cell, index) in state.cells" :key="index")
+                .blank-cell.cell(v-if="cell.color === 'blank'" @click="setPiece(index, 'black')") 
+                .black-cell.cell(v-else-if="cell.color === 'black'" @click="setPiece(index, 'white')") ●
+                .white-cell.cell(v-else @click="setPiece(index, 'black')") ○
 </template>
 
 <script lang="ts">
 import { defineComponent, onMounted, onUnmounted, ref, PropType } from '@vue/composition-api'
-import getGame, { Color } from '@/scripts/game'
+import getGame, { Cell } from '@/scripts/game'
 import { FirebaseUser } from '@/scripts/user'
 
 export default defineComponent({
@@ -24,19 +24,18 @@ export default defineComponent({
     setup(prop, { root }) {
         const displayName = prop.user.displayName
 
-        const myColor = ref<Color>('black')
-        const game = getGame(root.$route.params.gemeTableId)
-        const cells = game.data
+        const gameLintener = getGame(root.$route.params.gemeTableId)
+        const state = gameLintener.state
 
-        onMounted(() => game.subscribe())
-        onUnmounted(() => game.unsubscribe())
+        onMounted(() => gameLintener.subscribe())
+        onUnmounted(() => gameLintener.unsubscribe())
 
-        const setPiece = (location: number, color: Color) => game.setPiece(location, color)
-        const newGame = () => game.newGame()
+        const setPiece = (location: number, cell: Cell) => gameLintener.setPiece(location, cell)
+        const newGame = () => gameLintener.newGame()
 
         const gameTableId = root.$route.params.gameTableId
 
-        return { cells, gameTableId, setPiece, displayName }
+        return { state, gameTableId, setPiece, displayName }
     },
 })
 </script>

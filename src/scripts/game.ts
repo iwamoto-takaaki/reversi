@@ -1,50 +1,101 @@
 import { Ref, ref } from '@vue/composition-api'
+import { Unsubscribe } from 'firebase'
+import { db, functions } from '@/scripts/firebase'
+import {  } from '@/scripts/gameListener'
+import { FirebaseUser } from '@/scripts/user'
 
-export type Color = 'blank' | 'black' | 'white'
+export type Cell = ' ' | '○' | '●'
 
-export interface Cell {
-    location: number,
-    color: Color,
+export interface GameTable {
+    id: string,
+    createdAt: Date,
+    title: string,
+    owner: string,
+    ownerId: string,
+    board: Cell[],
 }
 
-export interface Game {
-    data: Ref<Cell[]>,
-    subscribe: () => void,
-    unsubscribe: () => void,
-    setPiece: (location: number, color: Color) => void,
-    newGame: () => void,
+export const toGameTable = (id: string, data: any): GameTable => {
+    return {
+        id,
+        createdAt: new Date(data.createdAt),
+        title: data.title,
+        owner: data.owner,
+        ownerId: data.ownerId,
+        board: toBoard(data.bord),
+    }
 }
 
-const initCells = (): Cell[] => {
+const toBoard = (data: any): Cell[] => {
+    if (!data) { return initBoard() }
+    if (!Array.isArray(data)) { return initBoard() }
+    if (data.length < 8 * 8)  { return initBoard() }
+    return data.map((c) => c === '○' || c === '●' ? c : ' ')
+}
+
+const initBoard = (): Cell[] => {
     const ret: Cell[] = []
     for (let i = 0; i < 8 * 8 ; ++i) {
         if (i === 3 * 8 + 3 || i === 4 * 8 + 4) {
-            ret.push({location: i, color: 'black'})
-        } else if(i === 4 * 8 +3 || i === 3 * 8 + 4) {
-            ret.push({location: i, color: 'white'})
+            ret.push('●')
+        } else if (i === 4 * 8 + 3 || i === 3 * 8 + 4) {
+            ret.push('○')
         } else {
-            ret.push({location: i, color: 'blank'})
+            ret.push(' ')
         }
     }
 
     return ret
 }
 
-const getGame = (id: string): Game => {
-    const data = ref(initCells())
+export const toFirebaseObject = (game: GameTable): any => {
+    return {
+        id: game.id,
+        createdAt: game.createdAt.toISOString,
+        title: game.title,
+        owner: game.owner,
+        ownerId: game.ownerId,
+        board: game.board,
+    }
+}
 
-    const subscribe = () => { console.log('subscribe') }
-    const unsubscribe = () => { console.log('unsubscribe') }
+export const newGameTable = (user: FirebaseUser, title: string): any => {
+    return {
+        id: '',
+        createdAt: (new Date()).toISOString(),
+        title,
+        owner: user.displayName,
+        ownerId: user.uid,
+        bord: initBoard(),
+    }
+}
 
-    const setPiece = (location: number, color: Color) => {
-        const target = data.value.find((cell) => cell.location === location)
-        if (!target) { return }
-        target.color = color
+export interface GameLisner {
+    state: Ref<GameTable | undefined>,
+    subscribe: () => void,
+    unsubscribe: () => void,
+    setPiece: (location: number, cell: Cell) => void,
+    newGame: () => void,
+}
+
+const getGame = (id: string): GameLisner => {
+    const state = ref<GameTable | undefined>(undefined)
+    let detacher: Unsubscribe | undefined
+    const doc = db.doc(`gametables/${id}`)
+
+    const subscribe = () => {
+        detacher = doc.onSnapshot((snapshot) => { state.value = toGameTable(snapshot.id, snapshot.data()) })
+    }
+    const unsubscribe = () => { detacher && detacher() }
+
+    const setter = functions.httpsCallable('setGameCell')
+    const setPiece = async (location: number, cell: Cell) => {
+        return setter.call({ location, cell })
     }
 
-    const newGame = () => data.value = initCells()
+    const newGame = () => state.value && (state.value.board = initBoard())
 
-    return { data, subscribe, unsubscribe, setPiece, newGame }
+    return { state, subscribe, unsubscribe, setPiece, newGame }
 }
 
 export default getGame

@@ -1,7 +1,7 @@
 <template lang="pug">
   #gemetables
     h1 テーブル一覧
-    p userId: {{ userid }}
+    p userId: {{ userid }} name: {{ name }}
     P newGameId: {{ state.id }}
     form.new-game(@submit.prevent="createGameTable")
       input.newTitle(type="text" v-model="newTitle")
@@ -14,7 +14,8 @@
 import { defineComponent, reactive, computed, onMounted, ref, toRef, onUnmounted, PropType } from '@vue/composition-api'
 import { Listener } from '@/scripts/interfaces'
 import { FirebaseUser } from '@/scripts/user'
-import getGameTableListener, { GameTable } from '@/scripts/gameListener'
+import getGameTableListener from '@/scripts/gameListener'
+import { GameTable } from '@/scripts/game'
 
 export default defineComponent ({
     props: {
@@ -36,7 +37,8 @@ export default defineComponent ({
     onUnmounted(() => gameListener.unsubscribe())
 
     const games = gameListener.data
-    const userid = props.user.uid
+    const userid = computed(() => props.user.uid)
+    const name = computed(() => props.user.displayName)
 
     const createGameTable = async () => {
       if (!newTitle.value) { return }
@@ -47,7 +49,7 @@ export default defineComponent ({
     const moveGame = (id: string) => root.$router.push(`/game/${id}`)
     const gameClicked = (game: GameTable) => moveGame(game.id)
 
-    return { newTitle, userid, state, games, createGameTable, gameClicked }
+    return { newTitle, userid, name, state, games, createGameTable, gameClicked }
   },
 })
 </script>
