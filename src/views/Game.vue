@@ -3,15 +3,15 @@
         h1 Reversi
         p hello {{ displayName }}
         .baord
-            .cells(v-for="(cell, index) in state.cells" :key="index")
-                .blank-cell.cell(v-if="cell.color === 'blank'" @click="setPiece(index, 'black')") 
-                .black-cell.cell(v-else-if="cell.color === 'black'" @click="setPiece(index, 'white')") ●
-                .white-cell.cell(v-else @click="setPiece(index, 'black')") ○
+            .cells(v-for="cell in cells" :key="cell.locate")
+                .blank-cell.cell(@click="clickedPiece(cell)") {{ cell.piece }}  
 </template>
 
 <script lang="ts">
 import { defineComponent, onMounted, onUnmounted, ref, PropType } from '@vue/composition-api'
-import getGame, { Cell } from '@/scripts/game'
+import { Listener } from '@/scripts/interfaces'
+import getGame, { getGameTableListener } from '@/scripts/gameListener'
+import getBoard, { Cell } from '@/scripts/boardLisner'
 import { FirebaseUser } from '@/scripts/user'
 
 export default defineComponent({
@@ -24,18 +24,30 @@ export default defineComponent({
     setup(prop, { root }) {
         const displayName = prop.user.displayName
 
-        const gameLintener = getGame(root.$route.params.gemeTableId)
-        const state = gameLintener.state
+        const gameLintener = getGameTableListener(root.$route.params.gameTableId)
+        const boardListener =  getBoard(root.$route.params.gameTableId)
 
-        onMounted(() => gameLintener.subscribe())
-        onUnmounted(() => gameLintener.unsubscribe())
+        const cells = ref(boardListener.cells)
 
-        const setPiece = (location: number, cell: Cell) => gameLintener.setPiece(location, cell)
-        const newGame = () => gameLintener.newGame()
+        const listeners: Listener[] = [gameLintener, boardListener]
+        onMounted(() => listeners.map((l) => l.subscribe()))
+        onUnmounted(() => listeners.map((l) => l.unsubscribe()))
+
+        const setPiece = (cell: Cell) => boardListener.setCell(cell)
+        const newGame = () => boardListener.newGame()
 
         const gameTableId = root.$route.params.gameTableId
 
-        return { state, gameTableId, setPiece, displayName }
+        const clickedPiece = (cell: Cell) => {
+            if (cell.piece === ' ' || cell.piece === '●' ) {
+                cell.piece = '○'
+            } else {
+                cell.piece = '●'
+            }
+            setPiece(cell)
+        }
+
+        return { cells, gameTableId, clickedPiece, displayName }
     },
 })
 </script>

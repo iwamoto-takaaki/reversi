@@ -2,9 +2,53 @@ import { Unsubscribe } from 'firebase'
 import { db } from '@/scripts/firebase'
 import { ref, Ref, watch, computed } from '@vue/composition-api'
 import { FirebaseUser } from '@/scripts/user'
-import { GameTable, toGameTable, newGameTable, toFirebaseObject } from '@/scripts/game'
+
+export interface GameTable {
+    id: string,
+    createdAt: Date,
+    title: string,
+    owner: string,
+    ownerId: string,
+}
 
 export interface GameTableListener {
+    data: Ref<GameTable | undefined>,
+    subscribe: () => void,
+    unsubscribe: () => void,
+    update: () => void,
+}
+
+const toFirebaseObject = (game: GameTable): any => {
+    return {
+        id: game.id,
+        createdAt: game.createdAt.toISOString,
+        title: game.title,
+        owner: game.owner,
+        ownerId: game.ownerId,
+    }
+}
+
+const newGameTable = (user: FirebaseUser, title: string): any => {
+    return {
+        id: '',
+        createdAt: (new Date()).toISOString(),
+        title,
+        owner: user.displayName,
+        ownerId: user.uid,
+    }
+}
+
+const toGameTable = (id: string, data: any): GameTable => {
+    return {
+        id,
+        createdAt: new Date(data.createdAt),
+        title: data.title,
+        owner: data.owner,
+        ownerId: data.ownerId,
+    }
+}
+
+export interface GameTablesListener {
     data: Ref<GameTable[]>,
     subscribe: () => void,
     unsubscribe: () => void,
@@ -13,7 +57,7 @@ export interface GameTableListener {
     update: (game: GameTable) => void,
 }
 
-const getGameTableListener = (user: FirebaseUser): GameTableListener => {
+const getGameTablesListener = (user: FirebaseUser): GameTablesListener => {
     const data = ref<GameTable[]>([])
 
     let detacher: Unsubscribe | undefined
@@ -42,4 +86,24 @@ const getGameTableListener = (user: FirebaseUser): GameTableListener => {
     return { data, subscribe, unsubscribe, newRecord, remove, update }
 }
 
-export default getGameTableListener;
+export default getGameTablesListener
+
+export const getGameTableListener = (id: string): GameTableListener => {
+    const data = ref<GameTable>()
+
+    let detacher: Unsubscribe | undefined
+    const docRef = db.doc(`gametables/${id}`)
+
+    const subscribe = () => {
+        detacher =　docRef
+            .onSnapshot((doc) => {
+                if (!doc.exists) { return }
+                data.value = toGameTable(doc.id, doc.data())
+            })
+    }
+    const unsubscribe = () => detacher && detacher()
+
+    const update = async () => data.value && await docRef.update(toFirebaseObject(data.value))
+
+    return { data, subscribe, unsubscribe, update }
+}

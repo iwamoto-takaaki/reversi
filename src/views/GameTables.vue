@@ -14,8 +14,7 @@
 import { defineComponent, reactive, computed, onMounted, ref, toRef, onUnmounted, PropType } from '@vue/composition-api'
 import { Listener } from '@/scripts/interfaces'
 import { FirebaseUser } from '@/scripts/user'
-import getGameTableListener from '@/scripts/gameListener'
-import { GameTable } from '@/scripts/game'
+import getGameTableListener, { GameTable } from '@/scripts/gameListener'
 
 export default defineComponent ({
     props: {
