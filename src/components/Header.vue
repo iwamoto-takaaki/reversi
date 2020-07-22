@@ -4,8 +4,8 @@
             h1 REVERSI
         .nav
             .links
-                router-link(to="/") Home
-                router-link(to="/gametables" v-if="authenticated") Reversi
+                router-link(to="/") はじめに
+                router-link(to="/gametables" v-if="authenticated") テーブル管理
             .login
                 .signin-btn(v-if="!authenticated")
                     router-link.button(to="/auth") Sign In
