@@ -4,8 +4,7 @@
             h1 REVERSI
         .nav
             .links
-                router-link(to="/") Home1
-                router-link(to="/about") About
+                router-link(to="/") Home
                 router-link(to="/gametables" v-if="authenticated") Reversi
             .login
                 .signin-btn(v-if="!authenticated")
