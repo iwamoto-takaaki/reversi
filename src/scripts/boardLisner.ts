@@ -1,4 +1,4 @@
-import { Ref, ref } from '@vue/composition-api'
+import { Ref, ref, computed, ComputedRef } from '@vue/composition-api'
 import { Unsubscribe } from 'firebase'
 import { db } from '@/scripts/firebase'
 
@@ -17,6 +17,8 @@ export interface Board {
     unsubscribe: () => void,
     setCell: (cell: Cell) => void,
     newGame: () => void,
+    countBlack: ComputedRef<number>,
+    countWhite: ComputedRef<number>,
 }
 
 const toBoard = (cells: Cell[]): Cell[] => {
@@ -104,7 +106,15 @@ const getGame = (id: string): Board => {
 
     const newGame = () => cells.value && (initBoard().map((c) => setCell(c)))
 
-    return { cells, subscribe, unsubscribe, setCell, newGame }
+    const countPiece = (piece: Piece) => {
+        if(!cells.value) { return 0 }
+        return cells.value.filter(c => c.piece === piece).length
+    }
+
+    const countBlack = computed(() => countPiece('●'))
+    const countWhite = computed(() => countPiece('○'))
+
+    return { cells, subscribe, unsubscribe, setCell, newGame, countBlack, countWhite }
 }
 
 export default getGame

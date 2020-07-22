@@ -1,7 +1,6 @@
 <template lang="pug">
     #game
-        h1 Reversi
-        p hello {{ displayName }}
+        P Black: {{ countBlack }}, White: {{ countWhite }}
         .baord
             .cells(v-for="cell in cells" :key="cell.locate")
                 .blank-cell.cell(@click="clickedPiece(cell)") {{ cell.piece }}  
@@ -47,7 +46,11 @@ export default defineComponent({
             setPiece(cell)
         }
 
-        return { cells, gameTableId, clickedPiece, displayName }
+        return { 
+            cells, gameTableId, clickedPiece, displayName, 
+            countBlack: boardListener.countBlack, 
+            countWhite: boardListener.countWhite
+        }
     },
 })
 </script>
