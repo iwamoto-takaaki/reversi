@@ -1,15 +1,11 @@
 <template lang="pug">
-  .home
+  #home
     img(alt="Vue logo" src="../assets/logo.png")
     h1 firebase + vue で作ったリバーシ(オセロ)
     p このサイトは岩元隆明(iwamoto.takaaki@gmail.com)がポートフォリとして作った(本格)リバーシのサイトです。
-    p firebaseのリアルタイムデータベースとvueのreactiveで非常に軽量にリアルタイム通信を行います。
+    p firebaseのリアルタイムデータベースとvueのreactiveで非常に軽量に、リアルタイム通信を行います。
     h3 注意:
-    p １．コンピュータではなく、実際の人と対戦します。本格的なので、相手を探すところからゲームは始まります。
-    p ２．対戦用のボードを設定したら、URLをコピーして相手に送り対戦します。
-    p ３．手動でひっくり返すリアルな使用感にこだわっています。
-    p ４．URLを対戦相手に送ることで招待します。
-    p ５．マッチングはあらゆる手段を使って(あなたが)自由に探すことができます。
+    p コンピュータではなく、実際の人と対戦します。本格的なので、相手を探すところからゲームは始まります。
     h3 使い方:
     p １．右上のsing inボタンを押していただくとユーザー登録ができます。
     p ２．ログイン後、上に'テーブル管理'のリンクが表示されますので、クリックします。
@@ -24,3 +20,10 @@
       a(href="https://github.com/iwamoto-takaaki/reversi") https://github.com/iwamoto-takaaki/reversi
       | &gt;にて
 </template>
+
+<style scoped lang="sass">
+#home
+  h3
+    margin-top: 3rem
+  margin-bottom: 3rem
+</style>
