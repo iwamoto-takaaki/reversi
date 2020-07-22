@@ -107,8 +107,8 @@ const getGame = (id: string): Board => {
     const newGame = () => cells.value && (initBoard().map((c) => setCell(c)))
 
     const countPiece = (piece: Piece) => {
-        if(!cells.value) { return 0 }
-        return cells.value.filter(c => c.piece === piece).length
+        if (!cells.value) { return 0 }
+        return cells.value.filter((c) => c.piece === piece).length
     }
 
     const countBlack = computed(() => countPiece('●'))

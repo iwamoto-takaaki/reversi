@@ -46,10 +46,10 @@ export default defineComponent({
             setPiece(cell)
         }
 
-        return { 
-            cells, gameTableId, clickedPiece, displayName, 
-            countBlack: boardListener.countBlack, 
-            countWhite: boardListener.countWhite
+        return {
+            cells, gameTableId, clickedPiece, displayName,
+            countBlack: boardListener.countBlack,
+            countWhite: boardListener.countWhite,
         }
     },
 })
