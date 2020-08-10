@@ -1,6 +1,6 @@
 import { Unsubscribe, User } from 'firebase'
 import { auth } from '@/scripts/firebase'
-import { ref, Ref, toRef, ComputedRef, computed } from '@vue/composition-api'
+import { ref, Ref, toRef, ComputedRef, computed } from 'vue'
 
 export interface FirebaseUser {
     subscribe: () => void,

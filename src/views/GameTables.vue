@@ -1,17 +1,17 @@
 <template lang="pug">
-  #gemetables
-    h1 テーブル一覧
-    p userId: {{ userid }} name: {{ name }}
-    P newGameId: {{ state.id }}
-    form.new-game(@submit.prevent="createGameTable")
-      input.newTitle(type="text" v-model="newTitle")
-      input.submit(type="submit" value="登録")
-    .tableList(v-for="game in games" :key="game.id")
-      p(@click="gameClicked(game)") {{ game.title }}
+#gemetables
+  h1 テーブル一覧
+  p userId: {{ userid }} name: {{ name }}
+  P newGameId: {{ state.id }}
+  form.new-game(@submit.prevent="createGameTable")
+    input.newTitle(type="text" v-model="newTitle")
+    input.submit(type="submit" value="登録")
+  .tableList(v-for="game in games" :key="game.id")
+    p(@click="gameClicked(game)") {{ game.title }}
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, computed, onMounted, ref, toRef, onUnmounted, PropType } from '@vue/composition-api'
+import { defineComponent, reactive, computed, onMounted, ref, toRef, onUnmounted, PropType } from 'vue'
 import { Listener } from '@/scripts/interfaces'
 import { FirebaseUser } from '@/scripts/user'
 import getGameTableListener, { GameTable } from '@/scripts/gameListener'

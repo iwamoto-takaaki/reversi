@@ -1,4 +1,4 @@
-import { Ref, ref, computed, ComputedRef } from '@vue/composition-api'
+import { Ref, ref, computed, ComputedRef } from 'vue'
 import { Unsubscribe } from 'firebase'
 import { db } from '@/scripts/firebase'
 

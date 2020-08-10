@@ -1,6 +1,6 @@
 import { Unsubscribe } from 'firebase'
 import { db } from '@/scripts/firebase'
-import { ref, Ref, watch, computed } from '@vue/composition-api'
+import { ref, Ref, watch, computed } from 'vue'
 import { FirebaseUser } from '@/scripts/user'
 
 export interface GameTable {

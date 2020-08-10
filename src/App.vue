@@ -1,13 +1,13 @@
 <template lang="pug">
-  #app
-    #nav
-      headerVue(:user="user")/
-    router-view(:user="user")/
+#app
+  #nav
+    headerVue(:user="user")/
+  router-view(:user="user")/
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, reactive, onUnmounted } from '@vue/composition-api';
-import headerVue from '@/components/Header.vue';
+import { defineComponent, onMounted, reactive, onUnmounted } from 'vue'
+import headerVue from '@/components/Header.vue'
 import getUser from '@/scripts/user'
 
 export default defineComponent({

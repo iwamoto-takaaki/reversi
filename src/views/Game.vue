@@ -1,13 +1,13 @@
 <template lang="pug">
-    #game
-        P Black: {{ countBlack }}, White: {{ countWhite }}
-        .baord
-            .cells(v-for="cell in cells" :key="cell.locate")
-                .blank-cell.cell(@click="clickedPiece(cell)") {{ cell.piece }}  
+#game
+    P Black: {{ countBlack }}, White: {{ countWhite }}
+    .baord
+        .cells(v-for="cell in cells" :key="cell.locate")
+            .blank-cell.cell(@click="clickedPiece(cell)") {{ cell.piece }}  
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, onUnmounted, ref, PropType } from '@vue/composition-api'
+import { defineComponent, onMounted, onUnmounted, ref, PropType } from 'vue'
 import { Listener } from '@/scripts/interfaces'
 import getGame, { getGameTableListener } from '@/scripts/gameListener'
 import getBoard, { Cell } from '@/scripts/boardLisner'

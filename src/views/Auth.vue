@@ -1,9 +1,9 @@
 <template lang="pug">
-  #firebaseui-auth-container
+#firebaseui-auth-container
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted } from '@vue/composition-api'
+import { defineComponent, onMounted } from 'vue'
 import { authObject, ui } from '@/scripts/firebase'
 
 export default defineComponent({

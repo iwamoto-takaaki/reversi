@@ -1,20 +1,20 @@
 <template lang="pug">
-    #header-section
-        .title
-            h1 REVERSI
-        .nav
-            .links
-                router-link(to="/") はじめに
-                router-link(to="/gametables" v-if="authenticated") テーブル管理
-            .login
-                .signin-btn(v-if="!authenticated")
-                    router-link.button(to="/auth") Sign In
-                .signout(v-else)
-                    .singout-btn.button(@click="logout") Sign out
+#header-section
+    .title
+        h1 REVERSI
+    .nav
+        .links
+            router-link(to="/") はじめに
+            router-link(to="/gametables" v-if="authenticated") テーブル管理
+        .login
+            .signin-btn(v-if="!authenticated")
+                router-link.button(to="/auth") Sign In
+            .signout(v-else)
+                .singout-btn.button(@click="logout") Sign out
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, onMounted, onUnmounted, watch, PropType } from '@vue/composition-api'
+import { defineComponent, computed, onMounted, onUnmounted, watch, PropType } from 'vue'
 import getUser, { FirebaseUser } from '@/scripts/user'
 
 export default defineComponent ({
