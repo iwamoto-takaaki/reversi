@@ -6,11 +6,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, reactive, onUnmounted } from 'vue'
+import { onMounted, reactive, onUnmounted } from 'vue'
 import headerVue from '@/components/Header.vue'
 import getUser from '@/scripts/user'
 
-export default defineComponent({
+export default {
+  name: 'App',
   components: {
     headerVue,
   },
@@ -22,7 +23,7 @@ export default defineComponent({
 
     return { user }
   },
-})
+}
 </script>
 
 <style>
